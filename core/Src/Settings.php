@@ -1,5 +1,4 @@
 <?php
-
 namespace Src;
 
 use Error;
@@ -23,11 +22,13 @@ class Settings
 
     public function getRootPath(): string
     {
-        return $this->path['root'] ? '/' . $this->path['root'] : '';
+        $path = $this->_settings['path'] ?? [];
+        return isset($path['root']) && $path['root'] ? '/' . $path['root'] : '';
     }
 
     public function getViewsPath(): string
     {
-        return '/' . $this->path['views'] ?? '';
+        $path = $this->_settings['path'] ?? [];
+        return isset($path['views']) ? '/' . $path['views'] : '';
     }
 }

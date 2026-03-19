@@ -1,5 +1,4 @@
 <?php
-
 namespace Src;
 
 use Error;
@@ -16,9 +15,7 @@ class Route
 
     public static function add(string $route, array $action): void
     {
-        if (!array_key_exists($route, self::$routes)) {
-            self::$routes[$route] = $action;
-        }
+        self::$routes[$route] = $action;
     }
 
     public function start(): void
@@ -34,13 +31,12 @@ class Route
         $action = self::$routes[$path][1];
 
         if (!class_exists($class)) {
-            throw new Error('This class does not exist');
+            throw new Error('Class does not exist');
         }
 
         if (!method_exists($class, $action)) {
-            throw new Error('This method does not exist');
+            throw new Error('Method does not exist');
         }
-
 
         call_user_func([new $class, $action]);
     }
