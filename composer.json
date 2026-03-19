@@ -1,0 +1,16 @@
+{
+    "name": "vladismargo-glitch/popop",
+    "description": "Для задания",
+    "type": "project",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "vladismargo-glith",
+            "email": "vladismargo@gmail.com"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {
+        "php": "^7.4 | ^8.0"
+    }
+}
