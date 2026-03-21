@@ -31,4 +31,9 @@ class Settings
         $path = $this->_settings['path'] ?? [];
         return isset($path['views']) ? '/' . $path['views'] : '';
     }
+
+    public function getDbSetting(): array
+    {
+        return $this->db ?? [];
+    }
 }
