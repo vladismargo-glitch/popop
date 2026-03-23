@@ -40,4 +40,15 @@ class Route
 
         call_user_func([new $class, $action], new Request());
     }
+
+    // Добавляем методы из листинга 3.19 сюда:
+    public function redirect(string $url): void
+    {
+        header('Location: ' . $this->getUrl($url));
+    }
+
+    public function getUrl(string $url): string
+    {
+        return self::$prefix . $url;
+    }
 }
