@@ -13,18 +13,13 @@ class Application
     private Auth $auth;
     public function __construct(Settings $settings)
     {
-        //Привязываем класс со всеми настройками приложения
-        $this->settings = $settings;
-        //Привязываем класс маршрутизации с установкой префикса
-        $this->route = new Route($this->settings->getRootPath());
-        //Создаем класс менеджера для базы данных
-        $this->dbManager = new Capsule();
- $this->auth = new $this->settings->app['auth'];
- //Настройка для работы с базой данных
- $this->dbRun();
-
- $this->auth::init(new $this->settings->app['identity']);
- }
+       $this->settings = $settings;
+       $this->route = Route::single()->setPrefix($this->settings->getRootPath());
+       $this->dbManager = new Capsule();
+       $this->auth = new $this->settings->app['auth'];
+       $this->dbRun();
+       $this->auth::init(new $this->settings->app['identity']);
+    }
     public function __get($key)
     {
         switch ($key) {
