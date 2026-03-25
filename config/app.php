@@ -8,5 +8,10 @@ return [
     'routeMiddleware' => [
         'auth' => \Middlewares\AuthMiddleware::class,
         'role' => \Middlewares\RoleMiddleware::class,
-    ]
+    ],
+    //Класс для валидации
+        'validators' => [
+            'required' => \Validators\RequireValidator::class,
+            'unique' => \Validators\UniqueValidator::class
+        ]
 ];
