@@ -4,7 +4,6 @@ namespace Controller;
 use Model\User;
 use Src\Auth\Auth;
 use Src\Request;
-use Src\Validator\Validator;
 use Src\View;
 
 class SiteController
@@ -14,30 +13,40 @@ class SiteController
         return new View('site.index');
     }
 
-    // Страница регистрации
     public function signup(Request $request): string
     {
         if ($request->method === 'POST') {
-            $validator = new Validator($request->all(), [
-                'name' => ['required'],
-                'login' => ['required', 'unique:users,login'],
-                'password' => ['required']
-            ], [
-                'required' => 'Поле :field пусто',
-                'unique' => 'Поле :field должно быть уникально'
-            ]);
+            // Получаем данные из формы
+            $name = $request->get('name');
+            $login = $request->get('login');
+            $password = $request->get('password');
 
-            if ($validator->fails()) {
-                return new View('site.signup', ['message' => json_encode($validator->errors(), JSON_UNESCAPED_UNICODE)]);
+            // Проверяем, что поля не пустые
+            if (empty($name) || empty($login) || empty($password)) {
+                return new View('site.signup', ['message' => 'Все поля обязательны для заполнения']);
             }
 
-            $userData = $request->all();
-            $userData['role'] = 'guest';
+            // Проверяем, что логин не занят
+            $existingUser = User::where('login', $login)->first();
+            if ($existingUser) {
+                return new View('site.signup', ['message' => 'Пользователь с таким логином уже существует']);
+            }
 
-            if (User::create($userData)) {
+            // Создаем пользователя
+            $user = new User();
+            $user->name = $name;
+            $user->login = $login;
+            $user->password = md5($password);
+            $user->role = 'guest';
+
+            if ($user->save()) {
                 app()->route->redirect('/login');
+                return '';
             }
+
+            return new View('site.signup', ['message' => 'Ошибка регистрации']);
         }
+
         return new View('site.signup');
     }
 
@@ -48,8 +57,8 @@ class SiteController
         }
 
         if (Auth::attempt($request->all())) {
-            // После успешного входа редирект на главную
             app()->route->redirect('/');
+            return '';
         }
 
         return new View('site.login', ['message' => 'Неправильные логин или пароль']);

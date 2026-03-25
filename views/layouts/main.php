@@ -23,6 +23,9 @@
                         <li class="nav-item">
                             <a class="nav-link" href="<?= app()->route->getUrl('/departments') ?>">Подразделения</a>
                         </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="<?= app()->route->getUrl('/users') ?>">Пользователи</a>
+                        </li>
                     <?php endif; ?>
                 <?php endif; ?>
             </ul>
