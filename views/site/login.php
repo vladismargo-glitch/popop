@@ -1,12 +1,44 @@
 <h2>Авторизация</h2>
-<h3><?= $message ?? ''; ?></h3>
-<h3><?= app()->auth->user()->name ?? ''; ?></h3>
-<?php
-if (!app()->auth::check()):
-    ?>
-    <form method="post">
-        <label>Логин <input type="text" name="login"></label>
-        <label>Пароль <input type="password" name="password"></label>
-        <button>Войти</button>
+
+<?php if (isset($message)): ?>
+    <div style="background: #f8d7da; color: #721c24; padding: 10px; margin-bottom: 15px; border-radius: 4px;">
+        <?php
+        $errors = json_decode($message, true);
+        if (is_array($errors)) {
+            foreach ($errors as $field => $errorMessages) {
+                $fieldName = match($field) {
+                    'login' => 'Логин',
+                    'password' => 'Пароль',
+                    default => $field
+                };
+                echo '• <strong>' . $fieldName . '</strong>: ' . implode(', ', $errorMessages) . '<br>';
+            }
+        } else {
+            echo htmlspecialchars($message);
+        }
+        ?>
+    </div>
+<?php endif; ?>
+
+<?php if (!app()->auth::check()): ?>
+    <form method="post" action="<?= app()->route->getUrl('/login') ?>">
+        <input type="hidden" name="csrf_token" value="<?= app()->auth::generateCSRF() ?>">
+
+        <div style="margin-bottom: 15px;">
+            <label>Логин:</label><br>
+            <input type="text" name="login" style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px;">
+        </div>
+
+        <div style="margin-bottom: 15px;">
+            <label>Пароль:</label><br>
+            <input type="password" name="password" style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px;">
+        </div>
+
+        <div>
+            <button type="submit" style="background: #007bff; color: white; border: none; padding: 10px 20px; border-radius: 4px; cursor: pointer;">Войти</button>
+            <a href="<?= app()->route->getUrl('/signup') ?>" style="margin-left: 10px;">Нет аккаунта? Зарегистрироваться</a>
+        </div>
     </form>
-<?php endif;
+<?php else: ?>
+    <h3>Вы уже вошли как <?= app()->auth::user()->name ?? ''; ?></h3>
+<?php endif; ?>

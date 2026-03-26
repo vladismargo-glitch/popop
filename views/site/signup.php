@@ -22,6 +22,8 @@
 <?php endif; ?>
 
 <form method="post" action="<?= app()->route->getUrl('/signup') ?>">
+    <input name="csrf_token" type="hidden" value="<?= app()->auth::generateCSRF() ?>"/>
+
     <div style="margin-bottom: 15px;">
         <label>Имя:</label><br>
         <input type="text" name="name" style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px;">
