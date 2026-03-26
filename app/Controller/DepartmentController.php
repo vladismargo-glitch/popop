@@ -4,6 +4,7 @@ namespace Controller;
 use Model\Department;
 use Src\Request;
 use Src\View;
+use Src\Validator\Validator;
 
 class DepartmentController
 {

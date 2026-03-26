@@ -38,10 +38,19 @@ class View
 
     public function render(string $view = '', array $data = []): string
     {
-        $path = $this->getPathToView($view ?: $this->view);  // исправлено: если view не передан, берем $this->view
+        $viewPath = $view ?: $this->view;
+        $path = $this->getPathToView($viewPath);
+
+        // ОТЛАДКА
+        echo 'Ищем файл: ' . $path . '<br>';
+        echo 'Файл существует: ' . (file_exists($path) ? '✅ ДА' : '❌ НЕТ') . '<br>';
+
+        if (!file_exists($path)) {
+            echo 'Файл НЕ НАЙДЕН! Проверьте путь.<br>';
+            die();
+        }
 
         if (file_exists($this->getPathToMain()) && file_exists($path)) {
-            // ВАЖНО: объединяем данные из конструктора ($this->data) и из параметра ($data)
             $allData = array_merge($this->data, $data);
             extract($allData, EXTR_PREFIX_SAME, '');
 

@@ -5,13 +5,14 @@ use Model\User;
 use Src\Auth\Auth;
 use Src\Request;
 use Src\View;
-use Src\Validator\Validator;  // ← обязательно добавьте импорт
+use Src\Validator\Validator;
 
 class SiteController
 {
+    // Главная страница
     public function index(): string
     {
-        return new View('site.index');
+        return (new View('site.index'))->render();  // ИСПРАВЛЕНО: добавили ->render()
     }
 
     public function signup(Request $request): string
@@ -27,9 +28,9 @@ class SiteController
             ]);
 
             if ($validator->fails()) {
-                return new View('site.signup', [
+                return (new View('site.signup', [
                     'message' => json_encode($validator->errors(), JSON_UNESCAPED_UNICODE)
-                ]);
+                ]))->render();
             }
 
             $user = new User();
@@ -42,14 +43,17 @@ class SiteController
                 app()->route->redirect('/login');
                 return '';
             }
+
+            return (new View('site.signup', ['message' => 'Ошибка регистрации']))->render();
         }
-        return new View('site.signup');
+
+        return (new View('site.signup'))->render();
     }
 
     public function login(Request $request): string
     {
         if ($request->method === 'GET') {
-            return new View('site.login');
+            return (new View('site.login'))->render();
         }
 
         if (Auth::attempt($request->all())) {
@@ -57,7 +61,7 @@ class SiteController
             return '';
         }
 
-        return new View('site.login', ['message' => 'Неправильные логин или пароль']);
+        return (new View('site.login', ['message' => 'Неправильные логин или пароль']))->render();
     }
 
     public function logout(): void

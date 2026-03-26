@@ -27,9 +27,9 @@
             <td>
                 <?php
                 $roles = [
-                    'admin' => '👑 Администратор',
-                    'hr' => '📋 HR-специалист',
-                    'guest' => '👤 Гость'
+                    'admin' => 'Администратор',
+                    'hr' => 'HR-специалист',
+                    'guest' => 'Гость'
                 ];
                 echo $roles[$user->role] ?? $user->role;
                 ?>

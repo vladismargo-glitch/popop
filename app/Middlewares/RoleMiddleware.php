@@ -10,10 +10,18 @@ class RoleMiddleware
     {
         if (!Auth::check()) {
             app()->route->redirect('/login');
+            return;
         }
 
-        if (!Auth::user()->hasRole($role)) {
+        $userRole = Auth::user()->role;
+
+        if ($userRole === 'admin') {
+            return;  // пропускаем
+        }
+
+        if ($userRole !== $role) {
             app()->route->redirect('/');
+            return;
         }
     }
 }
