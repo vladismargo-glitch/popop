@@ -5,6 +5,7 @@ use Model\User;
 use Src\Auth\Auth;
 use Src\Request;
 use Src\View;
+use Src\Validator\Validator;  // ← обязательно добавьте импорт
 
 class SiteController
 {
@@ -16,37 +17,32 @@ class SiteController
     public function signup(Request $request): string
     {
         if ($request->method === 'POST') {
-            // Получаем данные из формы
-            $name = $request->get('name');
-            $login = $request->get('login');
-            $password = $request->get('password');
+            $validator = new Validator($request->all(), [
+                'name' => ['required'],
+                'login' => ['required', 'unique:users,login'],
+                'password' => ['required']
+            ], [
+                'required' => 'Поле :field пусто',
+                'unique' => 'Поле :field должно быть уникально'
+            ]);
 
-            // Проверяем, что поля не пустые
-            if (empty($name) || empty($login) || empty($password)) {
-                return new View('site.signup', ['message' => 'Все поля обязательны для заполнения']);
+            if ($validator->fails()) {
+                return new View('site.signup', [
+                    'message' => json_encode($validator->errors(), JSON_UNESCAPED_UNICODE)
+                ]);
             }
 
-            // Проверяем, что логин не занят
-            $existingUser = User::where('login', $login)->first();
-            if ($existingUser) {
-                return new View('site.signup', ['message' => 'Пользователь с таким логином уже существует']);
-            }
-
-            // Создаем пользователя
             $user = new User();
-            $user->name = $name;
-            $user->login = $login;
-            $user->password = md5($password);
+            $user->name = $request->get('name');
+            $user->login = $request->get('login');
+            $user->password = md5($request->get('password'));
             $user->role = 'guest';
 
             if ($user->save()) {
                 app()->route->redirect('/login');
                 return '';
             }
-
-            return new View('site.signup', ['message' => 'Ошибка регистрации']);
         }
-
         return new View('site.signup');
     }
 
