@@ -1,16 +1,14 @@
 <h2>Управление подразделениями</h2>
 
 <?php if (app()->auth::user()->hasRole('admin')): ?>
-    <a href="<?= app()->route->getUrl('/departments/create') ?>" style="display: inline-block; margin-bottom: 15px; padding: 8px 15px; background: #28a745; color: white; text-decoration: none; border-radius: 4px;">➕ Добавить подразделение</a>
+    <a href="<?= app()->route->getUrl('/departments/create') ?>" class="btn btn-success">➕ Добавить подразделение</a>
 <?php endif; ?>
 
 <?php if ($departments->isEmpty()): ?>
-    <div style="background: #d1ecf1; color: #0c5460; padding: 10px; border-radius: 4px;">
-        Нет данных о подразделениях
-    </div>
+    <div class="alert alert-info">Нет данных о подразделениях</div>
 <?php else: ?>
-    <table border="1" cellpadding="10" cellspacing="0" style="width: 100%; border-collapse: collapse;">
-        <thead style="background: #f2f2f2;">
+    <table class="table">
+        <thead>
         <tr>
             <th>ID</th>
             <th>Название</th>
@@ -35,10 +33,10 @@
                 </td>
                 <td>
                     <?php if (app()->auth::user()->hasRole('admin')): ?>
-                        <form action="<?= app()->route->getUrl('/departments/destroy') ?>" method="post" style="display: inline;">
+                        <form action="<?= app()->route->getUrl('/departments/destroy') ?>" method="post" style="display: inline-block;">
                             <input type="hidden" name="csrf_token" value="<?= app()->auth::generateCSRF() ?>">
                             <input type="hidden" name="id" value="<?= $department->id ?>">
-                            <button type="submit" onclick="return confirm('Удалить подразделение?')" style="background: #dc3545; color: white; border: none; padding: 5px 10px; border-radius: 4px;">Удалить</button>
+                            <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Удалить подразделение?')">🗑️</button>
                         </form>
                     <?php endif; ?>
                 </td>
@@ -49,5 +47,5 @@
 <?php endif; ?>
 
 <div style="margin-top: 15px;">
-    <a href="<?= app()->route->getUrl('/') ?>">← На главную</a>
+    <a href="<?= app()->route->getUrl('/') ?>" class="btn btn-secondary">← На главную</a>
 </div>

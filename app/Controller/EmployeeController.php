@@ -53,6 +53,54 @@ class EmployeeController
         ]);
     }
 
+    public function averageAge(): string
+    {
+        $employees = Employee::all();
+
+        $totalAge = 0;
+        $count = 0;
+
+        foreach ($employees as $employee) {
+            if ($employee->birth_date) {
+                $birthDate = new \DateTime($employee->birth_date);
+                $today = new \DateTime();
+                $age = $today->diff($birthDate)->y;
+                $totalAge += $age;
+                $count++;
+            }
+        }
+
+        $averageAge = $count > 0 ? round($totalAge / $count, 1) : 0;
+
+        // Средний возраст по подразделениям
+        $departments = Department::all();
+        $ageByDepartment = [];
+
+        foreach ($departments as $department) {
+            $deptTotal = 0;
+            $deptCount = 0;
+            foreach ($department->employees as $employee) {
+                if ($employee->birth_date) {
+                    $birthDate = new \DateTime($employee->birth_date);
+                    $today = new \DateTime();
+                    $age = $today->diff($birthDate)->y;
+                    $deptTotal += $age;
+                    $deptCount++;
+                }
+            }
+            $ageByDepartment[$department->id] = [
+                'name' => $department->name,
+                'average' => $deptCount > 0 ? round($deptTotal / $deptCount, 1) : 0,
+                'count' => $deptCount
+            ];
+        }
+
+        return (new View('employee.average', [
+            'averageAge' => $averageAge,
+            'ageByDepartment' => $ageByDepartment,
+            'totalEmployees' => $count
+        ]))->render();
+    }
     public function edit(Request $request): string
     {
         $employee = Employee::find($request->get('id'));

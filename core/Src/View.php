@@ -41,15 +41,6 @@ class View
         $viewPath = $view ?: $this->view;
         $path = $this->getPathToView($viewPath);
 
-        // ОТЛАДКА
-        echo 'Ищем файл: ' . $path . '<br>';
-        echo 'Файл существует: ' . (file_exists($path) ? '✅ ДА' : '❌ НЕТ') . '<br>';
-
-        if (!file_exists($path)) {
-            echo 'Файл НЕ НАЙДЕН! Проверьте путь.<br>';
-            die();
-        }
-
         if (file_exists($this->getPathToMain()) && file_exists($path)) {
             $allData = array_merge($this->data, $data);
             extract($allData, EXTR_PREFIX_SAME, '');

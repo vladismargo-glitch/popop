@@ -1,7 +1,7 @@
 <h2>Авторизация</h2>
 
 <?php if (isset($message)): ?>
-    <div style="background: #f8d7da; color: #721c24; padding: 10px; margin-bottom: 15px; border-radius: 4px;">
+    <div class="alert alert-danger">
         <?php
         $errors = json_decode($message, true);
         if (is_array($errors)) {
@@ -21,24 +21,22 @@
 <?php endif; ?>
 
 <?php if (!app()->auth::check()): ?>
-    <form method="post" action="<?= app()->route->getUrl('/login') ?>">
+    <form method="post" action="<?= app()->route->getUrl('/login') ?>" class="card">
         <input type="hidden" name="csrf_token" value="<?= app()->auth::generateCSRF() ?>">
 
-        <div style="margin-bottom: 15px;">
-            <label>Логин:</label><br>
-            <input type="text" name="login" style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px;">
+        <div class="form-group">
+            <label class="form-label">Логин</label>
+            <input type="text" name="login" class="form-control" required>
         </div>
 
-        <div style="margin-bottom: 15px;">
-            <label>Пароль:</label><br>
-            <input type="password" name="password" style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px;">
+        <div class="form-group">
+            <label class="form-label">Пароль</label>
+            <input type="password" name="password" class="form-control" required>
         </div>
 
-        <div>
-            <button type="submit" style="background: #007bff; color: white; border: none; padding: 10px 20px; border-radius: 4px; cursor: pointer;">Войти</button>
-            <a href="<?= app()->route->getUrl('/signup') ?>" style="margin-left: 10px;">Нет аккаунта? Зарегистрироваться</a>
-        </div>
+        <button type="submit" class="btn btn-primary">Войти</button>
+        <p style="margin-top: 15px;">
+            <a href="<?= app()->route->getUrl('/signup') ?>">Нет аккаунта? Зарегистрироваться</a>
+        </p>
     </form>
-<?php else: ?>
-    <h3>Вы уже вошли как <?= app()->auth::user()->name ?? ''; ?></h3>
 <?php endif; ?>

@@ -1,19 +1,31 @@
 <h2>Список сотрудников</h2>
 
-<?php if (isset($employees) && (app()->auth::user()->hasRole('hr') || app()->auth::user()->hasRole('admin'))): ?>
-    <a href="<?= app()->route->getUrl('/employees/create') ?>" class="btn btn-primary mb-3">Добавить сотрудника</a>
+<?php if (app()->auth::user()->hasRole('hr') || app()->auth::user()->hasRole('admin')): ?>
+    <a href="<?= app()->route->getUrl('/employees/create') ?>" class="btn btn-success">➕ Добавить сотрудника</a>
 <?php endif; ?>
 
-<?php if (!isset($employees)): ?>
-    <div class="alert alert-danger">
-        <strong>Ошибка!</strong> Переменная $employees не передана в представление.
-    </div>
-<?php elseif ($employees->isEmpty()): ?>
-    <div class="alert alert-info">
-        Нет данных о сотрудниках. Добавьте первого сотрудника!
-    </div>
+<!-- Форма фильтрации -->
+<form method="get" class="filter-form">
+    <input type="text" name="search" placeholder="Поиск по фамилии или имени"
+           value="<?= htmlspecialchars($search ?? '') ?>" class="form-control">
+
+    <select name="department_id" class="form-control">
+        <option value="">Все подразделения</option>
+        <?php foreach ($departments as $dept): ?>
+            <option value="<?= $dept->id ?>" <?= ($departmentId ?? '') == $dept->id ? 'selected' : '' ?>>
+                <?= htmlspecialchars($dept->name) ?>
+            </option>
+        <?php endforeach; ?>
+    </select>
+
+    <button type="submit" class="btn btn-primary">🔍 Найти</button>
+    <a href="<?= app()->route->getUrl('/employees') ?>" class="btn btn-secondary">Сбросить</a>
+</form>
+
+<?php if ($employees->isEmpty()): ?>
+    <div class="alert alert-info">Нет данных о сотрудниках</div>
 <?php else: ?>
-    <table class="table table-bordered">
+    <table class="table">
         <thead>
         <tr>
             <th>ФИО</th>
@@ -26,16 +38,16 @@
         <tbody>
         <?php foreach ($employees as $employee): ?>
             <tr>
-                <td><?= htmlspecialchars($employee->full_name ?? $employee->last_name . ' ' . $employee->first_name) ?></td>
+                <td><?= htmlspecialchars($employee->full_name) ?></td>
                 <td><?= isset($employee->birth_date) ? date('d.m.Y', strtotime($employee->birth_date)) : 'Не указана' ?></td>
                 <td><?= htmlspecialchars($employee->position ?? 'Не указана') ?></td>
                 <td><?= htmlspecialchars($employee->department->name ?? 'Не указано') ?></td>
                 <td>
-                    <a href="<?= app()->route->getUrl('/employees/edit?id=' . $employee->id) ?>" class="btn btn-sm btn-warning">Редактировать</a>
+                    <a href="<?= app()->route->getUrl('/employees/edit?id=' . $employee->id) ?>" class="btn btn-warning btn-sm">✏️</a>
                     <form action="<?= app()->route->getUrl('/employees/destroy') ?>" method="post" style="display: inline-block;">
                         <input type="hidden" name="csrf_token" value="<?= app()->auth::generateCSRF() ?>">
                         <input type="hidden" name="id" value="<?= $employee->id ?>">
-                        <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Удалить сотрудника?')">Удалить</button>
+                        <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Удалить сотрудника?')">🗑️</button>
                     </form>
                 </td>
             </tr>

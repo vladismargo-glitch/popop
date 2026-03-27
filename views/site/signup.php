@@ -1,7 +1,7 @@
 <h2>Регистрация нового пользователя</h2>
 
 <?php if (isset($message)): ?>
-    <div style="background: #f8d7da; color: #721c24; padding: 10px; margin-bottom: 15px; border-radius: 4px;">
+    <div class="alert alert-danger">
         <?php
         $errors = json_decode($message, true);
         if (is_array($errors)) {
@@ -21,26 +21,26 @@
     </div>
 <?php endif; ?>
 
-<form method="post" action="<?= app()->route->getUrl('/signup') ?>">
-    <input name="csrf_token" type="hidden" value="<?= app()->auth::generateCSRF() ?>"/>
+<form method="post" action="<?= app()->route->getUrl('/signup') ?>" class="card">
+    <input type="hidden" name="csrf_token" value="<?= app()->auth::generateCSRF() ?>">
 
-    <div style="margin-bottom: 15px;">
-        <label>Имя:</label><br>
-        <input type="text" name="name" style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px;">
+    <div class="form-group">
+        <label class="form-label">Имя</label>
+        <input type="text" name="name" class="form-control" required>
     </div>
 
-    <div style="margin-bottom: 15px;">
-        <label>Логин:</label><br>
-        <input type="text" name="login" style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px;">
+    <div class="form-group">
+        <label class="form-label">Логин</label>
+        <input type="text" name="login" class="form-control" required>
     </div>
 
-    <div style="margin-bottom: 15px;">
-        <label>Пароль:</label><br>
-        <input type="password" name="password" style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px;">
+    <div class="form-group">
+        <label class="form-label">Пароль</label>
+        <input type="password" name="password" class="form-control" required>
     </div>
 
-    <div>
-        <button type="submit" style="background: #28a745; color: white; border: none; padding: 10px 20px; border-radius: 4px; cursor: pointer;">Зарегистрироваться</button>
+    <button type="submit" class="btn btn-success">Зарегистрироваться</button>
+    <p style="margin-top: 15px;">
         <a href="<?= app()->route->getUrl('/login') ?>">Уже есть аккаунт? Войти</a>
-    </div>
+    </p>
 </form>
