@@ -21,7 +21,6 @@ class EmployeeController
         return new View('employee.create', ['departments' => $departments]);
     }
 
-    // Сохранение нового сотрудника
     public function store(Request $request): string
     {
         $validator = new Validator($request->all(), [
@@ -53,6 +52,49 @@ class EmployeeController
         ]);
     }
 
+    public function transferForm(Request $request): string
+    {
+        $employee = Employee::find($request->get('id'));
+        if (!$employee) {
+            app()->route->redirect('/employees');
+            return '';
+        }
+
+        $departments = Department::all();
+        return (new View('employee.transfer', [
+            'employee' => $employee,
+            'departments' => $departments
+        ]))->render();
+    }
+
+    public function transfer(Request $request): string
+    {
+        $employee = Employee::find($request->get('id'));
+        if (!$employee) {
+            app()->route->redirect('/employees');
+            return '';
+        }
+
+        $validator = new Validator($request->all(), [
+            'department_id' => ['required']
+        ], [
+            'required' => 'Выберите подразделение'
+        ]);
+
+        if ($validator->fails()) {
+            return (new View('employee.transfer', [
+                'employee' => $employee,
+                'departments' => Department::all(),
+                'message' => json_encode($validator->errors(), JSON_UNESCAPED_UNICODE)
+            ]))->render();
+        }
+
+        $employee->department_id = $request->get('department_id');
+        $employee->save();
+
+        app()->route->redirect('/employees');
+        return '';
+    }
     public function averageAge(): string
     {
         $employees = Employee::all();

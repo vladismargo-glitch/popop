@@ -44,6 +44,7 @@
                 <td><?= htmlspecialchars($employee->department->name ?? 'Не указано') ?></td>
                 <td>
                     <a href="<?= app()->route->getUrl('/employees/edit?id=' . $employee->id) ?>" class="btn btn-warning btn-sm">✏️</a>
+                    <a href="<?= app()->route->getUrl('/employees/transfer?id=' . $employee->id) ?>" class="btn btn-info btn-sm">Перевести</a>
                     <form action="<?= app()->route->getUrl('/employees/destroy') ?>" method="post" style="display: inline-block;">
                         <input type="hidden" name="csrf_token" value="<?= app()->auth::generateCSRF() ?>">
                         <input type="hidden" name="id" value="<?= $employee->id ?>">

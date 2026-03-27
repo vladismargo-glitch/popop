@@ -122,6 +122,18 @@ body {
     background-color: #5a6268;
 }
 
+/* Стиль для кнопки перевода */
+.btn-info {
+    background-color: #17a2b8;
+    color: white;
+}
+
+.btn-info:hover {
+    background-color: #138496;
+    transform: translateY(-2px);
+    box-shadow: 0 2px 8px rgba(23,162,184,0.3);
+}
+
 .btn-sm {
     padding: 5px 10px;
     font-size: 12px;
@@ -272,4 +284,3 @@ textarea.form-control {
 .text-muted {
     color: #6c757d;
 }
-

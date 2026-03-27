@@ -15,11 +15,12 @@
             <?php if (app()->auth::check()): ?>
                 <?php if (app()->auth::user()->hasRole('hr') || app()->auth::user()->hasRole('admin')): ?>
                     <li><a href="<?= app()->route->getUrl('/employees') ?>">Сотрудники</a></li>
-                    <li><a href="<?= app()->route->getUrl('/employees/average') ?>">Статистика возраста</a></li>
+                    <li><a href="<?= app()->route->getUrl('/employees/average') ?>">Статистика</a></li>
+                    <li><a href="<?= app()->route->getUrl('/departments') ?>">Подразделения</a></li>
                 <?php endif; ?>
                 <?php if (app()->auth::user()->hasRole('admin')): ?>
-                    <li><a href="<?= app()->route->getUrl('/departments') ?>">Подразделения</a></li>
                     <li><a href="<?= app()->route->getUrl('/users') ?>">Пользователи</a></li>
+                    <li><a href="<?= app()->route->getUrl('/admin/activity') ?>">Активность</a></li>
                 <?php endif; ?>
             <?php endif; ?>
         </ul>

@@ -50,6 +50,17 @@ class UserController
         return (new View('user.create', ['message' => 'Ошибка создания пользователя']))->render();
     }
 
+    public function setRole(Request $request): string
+    {
+        $user = User::find($request->get('id'));
+        if ($user && $user->login !== 'admin') {
+            $user->role = $request->get('role');
+            $user->save();
+        }
+        app()->route->redirect('/users');
+        return '';
+    }
+
     public function destroy(Request $request): string
     {
         $user = User::find($request->get('id'));
