@@ -114,7 +114,6 @@ class EmployeeController
 
         $averageAge = $count > 0 ? round($totalAge / $count, 1) : 0;
 
-        // Средний возраст по подразделениям
         $departments = Department::all();
         $ageByDepartment = [];
 
@@ -175,5 +174,49 @@ class EmployeeController
         }
         app()->route->redirect('/employees');
         return '';
+    }
+
+
+public function export(): void
+{
+    $employees = Employee::with('department')->get();
+
+    header('Content-Type: text/csv; charset=utf-8');
+    header('Content-Disposition: attachment; filename="employees_' . date('Y-m-d') . '.csv"');
+
+    $output = fopen('php://output', 'w');
+
+    fprintf($output, chr(0xEF).chr(0xBB).chr(0xBF));
+
+    fputcsv($output, [
+        'ID',
+        'Фамилия',
+        'Имя',
+        'Отчество',
+        'Пол',
+        'Дата рождения',
+        'Адрес',
+        'Должность',
+        'Подразделение',
+        'Дата создания'
+    ]);
+
+    foreach ($employees as $employee) {
+        fputcsv($output, [
+            $employee->id,
+            $employee->last_name,
+            $employee->first_name,
+            $employee->patronymic,
+            $employee->gender == 'male' ? 'Мужской' : 'Женский',
+            $employee->birth_date,
+            $employee->address,
+            $employee->position,
+            $employee->department->name ?? 'Не указано',
+            $employee->created_at ?? ''
+        ]);
+    }
+
+    fclose($output);
+    exit();
     }
 }

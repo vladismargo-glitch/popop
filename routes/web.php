@@ -16,7 +16,8 @@ Route::add(['POST'], '/employees/destroy', [Controller\EmployeeController::class
 Route::add('GET', '/employees/average', [Controller\EmployeeController::class, 'averageAge'])->middleware('auth', 'role:hr');
 Route::add('GET', '/employees/transfer', [Controller\EmployeeController::class, 'transferForm'])->middleware('auth', 'role:hr');
 Route::add(['POST'], '/employees/transfer', [Controller\EmployeeController::class, 'transfer'])->middleware('auth', 'role:hr');
-
+Route::add('GET', '/employees/export', [Controller\EmployeeController::class, 'export'])->middleware('auth', 'role:admin');
+Route::add('GET', '/admin/export-logs', [Controller\AdminController::class, 'exportLogs'])->middleware('auth', 'role:admin');
 
 Route::add('GET', '/departments', [Controller\DepartmentController::class, 'index'])->middleware('auth', 'role:hr');
 Route::add('GET', '/departments/create', [Controller\DepartmentController::class, 'create'])->middleware('auth', 'role:hr');
@@ -29,3 +30,6 @@ Route::add(['POST'], '/users/store', [Controller\UserController::class, 'store']
 Route::add(['POST'], '/users/destroy', [Controller\UserController::class, 'destroy'])->middleware('auth', 'role:admin');
 Route::add('GET', '/admin/activity', [Controller\AdminController::class, 'activity'])->middleware('auth', 'role:admin');
 Route::add(['POST'], '/users/set-role', [Controller\UserController::class, 'setRole'])->middleware('auth', 'role:admin');
+Route::add('GET', '/admin/backup', [Controller\AdminController::class, 'backup'])->middleware('auth', 'role:admin');
+Route::add(['GET', 'POST'], '/admin/settings', [Controller\AdminController::class, 'settings'])->middleware('auth', 'role:admin');
+Route::add(['POST'], '/admin/save-settings', [Controller\AdminController::class, 'saveSettings'])->middleware('auth', 'role:admin');

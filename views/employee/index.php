@@ -1,10 +1,15 @@
 <h2>Список сотрудников</h2>
 
-<?php if (app()->auth::user()->hasRole('hr') || app()->auth::user()->hasRole('admin')): ?>
-    <a href="<?= app()->route->getUrl('/employees/create') ?>" class="btn btn-success">➕ Добавить сотрудника</a>
-<?php endif; ?>
+<div class="action-buttons">
+    <?php if (app()->auth::user()->hasRole('hr') || app()->auth::user()->hasRole('admin')): ?>
+        <a href="<?= app()->route->getUrl('/employees/create') ?>" class="btn btn-success">➕ Добавить сотрудника</a>
+    <?php endif; ?>
 
-<!-- Форма фильтрации -->
+    <?php if (app()->auth::user()->hasRole('admin')): ?>
+        <a href="<?= app()->route->getUrl('/employees/export') ?>" class="btn btn-info">Экспорт в CSV</a>
+    <?php endif; ?>
+</div>
+
 <form method="get" class="filter-form">
     <input type="text" name="search" placeholder="Поиск по фамилии или имени"
            value="<?= htmlspecialchars($search ?? '') ?>" class="form-control">
@@ -27,12 +32,12 @@
 <?php else: ?>
     <table class="table">
         <thead>
-        <tr>
-            <th>ФИО</th>
-            <th>Дата рождения</th>
-            <th>Должность</th>
-            <th>Подразделение</th>
-            <th>Действия</th>
+        汽
+        <th>ФИО</th>
+        <th>Дата рождения</th>
+        <th>Должность</th>
+        <th>Подразделение</th>
+        <th>Действия</th>
         </tr>
         </thead>
         <tbody>
